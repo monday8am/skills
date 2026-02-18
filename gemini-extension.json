@@ -1,0 +1,7 @@
+{
+  "name": "monday8am-skills",
+  "description": "Agent Skills for on-device ML: FunctionGemma fine-tuning, LiteRT-LM export, and more",
+  "version": "1.0.0",
+  "author": "monday8am",
+  "skills_directory": "skills"
+}

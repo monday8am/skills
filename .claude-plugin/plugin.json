@@ -1,0 +1,10 @@
+{
+  "name": "monday8am-skills",
+  "description": "Agent Skills for on-device ML: FunctionGemma fine-tuning, LiteRT-LM export, and more",
+  "version": "1.0.0",
+  "author": { "name": "monday8am" },
+  "homepage": "https://github.com/monday8am/skills",
+  "repository": "https://github.com/monday8am/skills",
+  "license": "MIT",
+  "keywords": ["functiongemma", "fine-tuning", "on-device", "function-calling", "android", "litertlm", "litert"]
+}
