@@ -1,4 +1,4 @@
-# monday8am Skills
+# Skills
 
 Agent Skills for on-device ML tasks: model fine-tuning, evaluation, and mobile deployment. Compatible with [Claude Code](https://claude.ai/code), [Codex](https://openai.com/codex), and [Gemini CLI](https://github.com/google-gemini/gemini-cli).
 
