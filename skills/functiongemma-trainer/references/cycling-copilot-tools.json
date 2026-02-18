@@ -1,0 +1,134 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "get_ride_status",
+      "description": "Get the cyclist's current ride state from GPS and device sensors. Returns speed, average speed, distance covered, distance remaining, elapsed time, current elevation, total ascent, and battery level. Call this when the rider asks about their current performance, progress, or how they are doing.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "What to check: all, speed, distance, elevation, battery, or time"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "return": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_segment_ahead",
+      "description": "Get information about the upcoming section of the current route. Returns elevation profile, surface type, estimated difficulty, and estimated time to complete. Call this when the rider asks what is coming up, how hard the next part is, or whether there are climbs ahead.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "How far ahead to look, e.g. 5km, 10km, next_section"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "return": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_weather_forecast",
+      "description": "Get current and upcoming weather conditions at the cyclist's location and along the route. Returns temperature, wind speed and direction, precipitation probability, and visibility. Call this when the rider asks about weather, wind, rain, or temperature.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Weather scope: current, ahead, or wind"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "return": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "find_nearby_poi",
+      "description": "Find points of interest near the current position or along the route. Returns location, distance, and type of nearby places. Call this when the rider needs to find a place to stop, eat, drink, rest, or get bike repairs.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Type of place: water, cafe, food, bike_shop, rest_area, shelter, or any"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "return": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_route_alternatives",
+      "description": "Request alternative routes to the destination with specific constraints. Returns 1 to 3 route options with distance, elevation gain, estimated time, and surface type. Requires network connection. Call this when the rider wants to change their route due to fatigue, weather, time, or terrain preference.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Routing constraint: flatter, shorter, paved, scenic, sheltered, or avoid_main_roads"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "return": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_rider_profile",
+      "description": "Get the rider's baseline fitness data and preferences from historical rides. Returns fitness level, preferred max gradient, average pace on flat and hills, bike type, and experience level. Call this to interpret the rider's current state relative to their normal capability.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Profile data type: fitness, preferences, or all"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "return": {
+        "type": "string"
+      }
+    }
+  }
+]

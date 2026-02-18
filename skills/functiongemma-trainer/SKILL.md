@@ -7,6 +7,21 @@ description: Fine-tune FunctionGemma for on-device function calling using SFT on
 
 Fine-tune Google's FunctionGemma (270M) for custom on-device function calling. This skill handles the full pipeline: dataset validation, FunctionGemma prompt formatting, SFT training on HF Jobs, evaluation, and LiteRT-LM export for Android.
 
+## Bundled Scripts
+
+This skill includes ready-to-use scripts in `scripts/`:
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/train_functiongemma.py` | SFT training with LoRA on HF Jobs |
+| `scripts/evaluate_functiongemma.py` | Evaluate tool selection and argument accuracy |
+| `scripts/validate_functiongemma_dataset.py` | Validate CSV dataset format before training |
+| `scripts/export_litertlm.py` | Convert fine-tuned model to `.litertlm` for Android |
+
+Example tool schema: `references/cycling-copilot-tools.json`
+
+All scripts use `uv` with inline PEP 723 dependencies — no `requirements.txt` needed.
+
 ## Overview
 
 FunctionGemma is a 270M parameter model built on Gemma 3, fine-tuned for function calling. It achieves 58% accuracy zero-shot and 70-85% after fine-tuning on domain-specific tools (depending on data quality and training epochs). This skill automates the fine-tuning process for your custom tool schemas.
