@@ -1,11 +1,9 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#   "torch",
-#   "transformers>=4.57.0",
+#   "unsloth[huggingface]",
 #   "trl>=0.25.0",
 #   "datasets",
-#   "peft",
 #   "huggingface_hub",
 #   "trackio",
 # ]
@@ -15,6 +13,8 @@ FunctionGemma Fine-Tuning Script
 ================================
 Fine-tunes google/functiongemma-270m-it on a CSV dataset of
 user_message -> tool_calls mappings using SFT with LoRA.
+
+Uses Unsloth for ~2x faster training and ~60% less VRAM vs standard transformers.
 
 Designed to run as a HF Job via:
   hf jobs uv run --flavor t4-small --secrets HF_TOKEN \\
@@ -29,11 +29,9 @@ import os
 import urllib.request
 
 import trackio
-import torch
 from datasets import load_dataset
 from huggingface_hub import login
-from peft import LoraConfig
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from unsloth import FastLanguageModel
 from trl import SFTTrainer, SFTConfig
 
 
@@ -133,27 +131,27 @@ def main():
     if eval_dataset:
         print(f"Evaluation examples: {len(eval_dataset)}")
 
-    # Load model and tokenizer
+    # Load model and tokenizer via Unsloth (~2x faster, ~60% less VRAM)
     model_name = "google/functiongemma-270m-it"
-    print(f"Loading {model_name}...")
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(
+    print(f"Loading {model_name} with Unsloth...")
+    model, tokenizer = FastLanguageModel.from_pretrained(
         model_name,
-        torch_dtype=torch.float32,
-        device_map="auto",
+        max_seq_length=args.max_length,
+        load_in_4bit=True,
     )
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    # LoRA config
-    lora_config = LoraConfig(
+    # Apply LoRA via Unsloth
+    model = FastLanguageModel.get_peft_model(
+        model,
         r=args.lora_r,
         lora_alpha=args.lora_alpha,
         lora_dropout=0.05,
         bias="none",
-        task_type="CAUSAL_LM",
         target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+        use_gradient_checkpointing="unsloth",
     )
 
     # Trackio setup
@@ -181,24 +179,23 @@ def main():
         save_strategy="epoch",
         eval_strategy="epoch" if eval_dataset else "no",
         max_length=args.max_length,
-        gradient_checkpointing=True,
-        gradient_checkpointing_kwargs={"use_reentrant": False},
+        gradient_checkpointing=False,  # handled by Unsloth (use_gradient_checkpointing="unsloth")
         push_to_hub=True,
         hub_model_id=args.output_repo,
         hub_token=hf_token,
         hub_strategy="every_save",
         report_to="trackio" if use_trackio else "none",
         run_name=args.trackio_run_name or args.trackio_project,
-        fp16=torch.cuda.is_available(),
+        fp16=False,   # Unsloth handles precision internally with load_in_4bit
+        bf16=False,
     )
 
-    # Train
+    # Train (peft_config omitted — LoRA already applied to model by Unsloth)
     trainer = SFTTrainer(
         model=model,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         args=training_args,
-        peft_config=lora_config,
     )
 
     print("Starting training...")
