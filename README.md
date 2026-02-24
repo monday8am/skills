@@ -8,7 +8,7 @@ Skills follow the standardized [Agent Skill](https://agentskills.io/home) format
 
 | Skill | Description |
 |-------|-------------|
-| [functiongemma-trainer](skills/functiongemma-trainer/) | Fine-tune Google's FunctionGemma (270M) for on-device function calling. Full pipeline: dataset validation, SFT training on HF Jobs, evaluation, and LiteRT-LM export for Android. |
+| [functiongemma-trainer](skills/functiongemma-trainer/) | Fine-tune Google's FunctionGemma (270M) for on-device function calling. Full pipeline: dataset validation, Unsloth-accelerated SFT training on HF Jobs (~2x faster, ~60% less VRAM), evaluation, and LiteRT-LM export for Android. |
 
 ## Installation
 
